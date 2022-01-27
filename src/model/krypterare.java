@@ -1,30 +1,41 @@
 package model;
 
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class krypterare {
-    public static void main(String[] args) {
-        String masige = "hhhhhhhhhh";
-        String kye = "jjj";
-        ArrayList<Character> krypt = inkrypterr(masige,kye);
+    private byte[] mesigeByt;
+    private byte[] keyByt;
+
+    public krypterare(String mesigeStr, String keyStr) {
+        mesigeByt = mesigeStr.getBytes(StandardCharsets.UTF_8);
+        keyByt = keyStr.getBytes(StandardCharsets.UTF_8);
     }
 
-    private static ArrayList<Character> inkrypterr(String masige, String kye) {
-        return null;
+    public krypterare(byte[] mesigeByt, byte[] keyByt) {
+        this.mesigeByt = mesigeByt;
+        this.keyByt = keyByt;
     }
 
-    private ArrayList<Character> inkrypter(String mesige, String kye) {
-        ArrayList<Character> krypt = new ArrayList<>();
-        int m = mesige.length();
-        int k = kye.length();
-        int kountK = 0;
-        for (int i = 0; i < m; i++, kountK++) {
-            if (kountK == k) {
-                kountK = 0;
+    public String getKryptStr() {
+        return Base64.getEncoder().encodeToString(bytinkrypter());
+    }
+
+    public byte[] getKryptByt() {
+        return bytinkrypter();
+    }
+
+    private byte[] bytinkrypter() {
+        int mLength = this.mesigeByt.length;
+        int kLength = this.keyByt.length;
+        byte[] kryptByteMesige = new byte[mLength];
+        int k = 0;
+        for (int i = 0; i < mLength; i++, k++) {
+            if (k == kLength) {
+                k = 0;
             }
-            System.out.println(i + "  " + kountK);
-
+            kryptByteMesige[i] = (byte) (this.mesigeByt[i]^this.keyByt[k]);
         }
-        return krypt;
+        return kryptByteMesige;
     }
 }
