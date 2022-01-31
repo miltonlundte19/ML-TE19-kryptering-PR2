@@ -17,8 +17,14 @@ public class krypterare {
         this.keyByt = keyByt;
     }
 
+    public krypterare(byte[] mesigeByt, String keyStr) {
+        this.mesigeByt = mesigeByt;
+        keyByt = keyStr.getBytes(StandardCharsets.UTF_8);
+    }
+
     public String getKryptStr() {
-        return Base64.getEncoder().encodeToString(bytinkrypter());
+        byte[] inkryptd = bytinkrypter();
+        return Base64.getEncoder().encodeToString(inkryptd);
     }
 
     public byte[] getKryptByt() {
