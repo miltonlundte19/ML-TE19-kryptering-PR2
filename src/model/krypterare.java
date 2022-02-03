@@ -2,6 +2,7 @@ package model;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Random;
 
 public class krypterare {
     private byte[] mesigeByt;
@@ -19,12 +20,15 @@ public class krypterare {
 
     public krypterare(byte[] mesigeByt, String keyStr) {
         this.mesigeByt = mesigeByt;
-        keyByt = keyStr.getBytes(StandardCharsets.UTF_8);
+        byte[] keySeeding = new byte[mesigeByt.length];
+        Random r = new Random(stringToSeed(keyStr));
+        r.nextBytes(keySeeding);
+        keyByt = keySeeding;
     }
 
     public String getKryptStr() {
         byte[] inkryptd = bytinkrypter();
-        return Base64.getEncoder().encodeToString(inkryptd);
+        return new String(inkryptd, StandardCharsets.UTF_8);
     }
 
     public byte[] getKryptByt() {
@@ -43,5 +47,16 @@ public class krypterare {
             kryptByteMesige[i] = (byte) (this.mesigeByt[i]^this.keyByt[k]);
         }
         return kryptByteMesige;
+    }
+
+    static long stringToSeed(String s) {
+        if (s == null) {
+            return 0;
+        }
+        long hash = 0;
+        for (char c : s.toCharArray()) {
+            hash = 31L*hash + c;
+        }
+        return hash;
     }
 }
